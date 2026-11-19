@@ -26,6 +26,7 @@
   --section-space: clamp(36px, 4.5vw, 80px);
   --image-radius: clamp(8px, .95vw, 16px);
   --icon-button: 44px;
+  --carousel-controls-gap: 24px;
   --control-text-size: 14px;
   --lead-media-height: calc((min(100vw, var(--page-width)) - 2 * var(--gutter)) * .347);
 }
@@ -658,7 +659,7 @@ footer {
   --spread-ratio: 1.414;
   --reader-max-width: 1050px;
   --reader-top-gap: clamp(16px, 3vw, 30px);
-  --reader-controls-gap: 16px;
+  --reader-controls-gap: var(--carousel-controls-gap);
   --reader-space: calc(100svh - var(--sticky-offset, 64px) - 56px - 72px - var(--reader-top-gap) - var(--reader-controls-gap) - var(--icon-button));
   width: min(100%, var(--reader-max-width), calc(max(1px, var(--reader-space)) * var(--spread-ratio)));
   margin: var(--reader-top-gap) auto 0;
@@ -817,7 +818,7 @@ body.lightbox-open { overflow: hidden; }
 }
 .case .zp-presentation-slides img.portfolio-active { opacity: 1; }
 .case .zp-presentation-slides img[hidden] { display: none; }
-.case .zp-presentation-controls { margin-top: 10px; }
+
 
 .portfolio-lightbox[open] { padding: 52px clamp(6px, 1.6vw, 26px) 58px; }
 .lightbox-image-area {
@@ -872,6 +873,7 @@ body.lightbox-open { overflow: hidden; }
   color: white;
   font-variant-numeric: tabular-nums;
 }
+.portfolio-lightbox[open]:has(.lightbox-controls:not([hidden])) { padding-bottom: calc(10px + var(--icon-button) + var(--carousel-controls-gap)); }
 .lightbox-controls[hidden] { display: none; }
 .lightbox-controls button { display: grid; place-items: center; width: var(--icon-button); height: var(--icon-button); }
 .print-reader[aria-busy] .print-controls button { cursor: progress; }
@@ -1080,8 +1082,7 @@ body:has(.dance-poster-dialog[open]) { overflow: hidden; }
   height: 100% !important;
   max-height: 100% !important;
 }
-.case .dance-carousel-research .dance-carousel-controls { margin-top: 10px; }
-.case .supertyazh-deck .supertyazh-controls { margin-top: 10px !important; padding-block: 0; }
+
 
 @media (max-width: 650px) {
   .case .dance-carousel-research { --presentation-width: .78; }
@@ -1092,9 +1093,10 @@ body:has(.dance-poster-dialog[open]) { overflow: hidden; }
 
 body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
 
+.case :is(.sevstar-controls, .zp-presentation-controls) { margin-top: var(--carousel-controls-gap); }
 .case .zp-print-carousel.portfolio-showcase-deck .image-carousel-controls,
 .case .image-carousel-controls.image-carousel-controls {
-  margin-top: var(--carousel-control-gap, 10px) !important;
+  margin-top: calc(var(--carousel-controls-gap) - var(--carousel-track-bottom, 0px)) !important;
   padding-block: 0;
 }
 @media (max-width: 760px) {

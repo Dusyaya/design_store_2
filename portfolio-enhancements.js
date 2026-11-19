@@ -223,7 +223,7 @@
         const trackWidth = track.clientWidth;
         if (!frontWidth || !trackWidth || !front.offsetHeight) return;
         const spaceBelowImage = (track.clientHeight - front.offsetHeight) / 2;
-        controls.style.setProperty("--carousel-control-gap", (10 - spaceBelowImage) + "px");
+        controls.style.setProperty("--carousel-track-bottom", spaceBelowImage + "px");
         slides.forEach((slide, index) => {
           if (slide.classList.contains("portfolio-offstage")) return;
           const offset = Number(slide.style.getPropertyValue("--perspective-offset"));
