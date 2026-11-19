@@ -85,11 +85,10 @@ function whatsappContactUrl() {
   return SITE.contacts.whatsapp + "?text=" + encodeURIComponent(contactMessage());
 }
 
-// Веб-редактор Gmail работает даже без настроенного почтового приложения.
+// Почтовый обработчик выбирает браузер или операционная система.
 function emailContactUrl() {
-  return "https://mail.google.com/mail/?view=cm&fs=1" +
-    "&to=" + encodeURIComponent(SITE.contacts.email) +
-    "&su=" + encodeURIComponent(window.PORTFOLIO_LANG === "en" ? "Design project inquiry" : "Запрос на дизайн-проект") +
+  return "mailto:" + SITE.contacts.email +
+    "?subject=" + encodeURIComponent(window.PORTFOLIO_LANG === "en" ? "Design project inquiry" : "Запрос на дизайн-проект") +
     "&body=" + encodeURIComponent(contactMessage());
 }
 
@@ -102,7 +101,7 @@ function socialLinks() {
   ];
   return '<div class="social-links">' +
     links.map(([name, url, icon]) =>
-      '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' +
+      '<a href="' + escapeHtml(url) + '"' + (icon === "mail-filled" ? "" : ' target="_blank" rel="noopener noreferrer"') + '>' +
       '<img class="social-icon" src="' + SITE_ROOT + 'assets/icons/' + icon +
       '.svg" alt="" width="22" height="22" loading="lazy">' +
       '<span>' + name + '</span></a>'
@@ -229,7 +228,7 @@ function caseCover(project) {
     '" style="--cover-ratio:' + artWidth / artHeight + '">' +
     windowBar(project.name + ".png") +
     '<div class="case-cover-media"><div class="case-cover-artwork"><img src="' + coverBase(project) +
-    '.png" alt="' + escapeHtml(project.name) + '" width="' + width + '" height="' + height +
+    '-case.webp" alt="' + escapeHtml(project.name) + '" width="' + width + '" height="' + height +
     '" style="--image-width:' + width / artWidth * 100 + '%;--image-left:' + -left / artWidth * 100 +
     '%;--image-top:' + -top / artHeight * 100 + '%" decoding="async" fetchpriority="high"></div></div></figure>';
   const images = CASE_HERO_IMAGES[project.id];

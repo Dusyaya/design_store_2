@@ -24,7 +24,7 @@ if (!project) {
     .map((label, index) => {
       const path = "assets/projects/" + project.id + "/" + (index + 1) + ".webp";
       return '<div class="project-image-slot">' +
-        '<img data-file="' + path + '" src="' + imagePath(path) + '" alt="' + escapeHtml(label) + '">' +
+        '<img data-file="' + path + '" src="' + imagePath(path) + '" alt="' + escapeHtml(label) + '" loading="lazy">' +
         '<div class="placeholder" style="display:none"><span>＋</span>' +
         '<strong>' + typography(label) + '</strong><small>Загрузите файл ' +
         escapeHtml(path) + '</small></div></div>';
@@ -40,7 +40,7 @@ if (!project) {
         const images = Array.isArray(item.images) && item.images.length ? item.images : [item.image];
         const slides = images.map((path, slideIndex) =>
           '<div class="showcase-slide"><img data-file="' + escapeHtml(path) +
-          '" src="' + imagePath(path) + '" alt="' + escapeHtml(item.title) + ', работа ' +
+          '" ' + (images.length > 1 ? 'data-src' : 'src') + '="' + imagePath(path) + '" alt="' + escapeHtml(item.title) + ', работа ' +
           (slideIndex + 1) + '" loading="lazy"><div class="placeholder" style="display:none"><span>＋</span><strong>' +
           typography(item.title) + '</strong><small>' + escapeHtml(path) + '</small></div></div>'
         ).join("");
@@ -73,7 +73,7 @@ if (!project) {
       '<div class="showcase-media zp-presentation-layout">' +
       '<figure class="zp-presentation-photo"><img src="' + imagePath('assets/projects/gold/photo.PNG') + '" alt="Презентация на мероприятии" loading="lazy"></figure>' +
       '<div class="zp-presentation-right"><div class="zp-presentation-slides">' +
-      Array.from({length:9}, (_,i) => '<img src="' + imagePath('assets/projects/gold/slide-' + String(i+1).padStart(2,'0') + '.jpg') + '" alt="Слайд презентации ' + (i+1) + '" loading="lazy">').join('') +
+      Array.from({length:9}, (_,i) => '<img data-src="' + imagePath('assets/projects/gold/slide-' + String(i+1).padStart(2,'0') + '.jpg') + '" alt="Слайд презентации ' + (i+1) + '" loading="lazy">').join('') +
       '</div><div class="zp-presentation-controls"><button type="button" class="zp-prev" aria-label="Предыдущий слайд">' + arrowSvg('left') + '</button><span class="zp-count">01 / 09</span><button type="button" class="zp-next" aria-label="Следующий слайд">' + arrowSvg('right') + '</button></div></div></div></article>'
     : '';
   const merchHtml = project.id === 'gold'
@@ -81,16 +81,16 @@ if (!project) {
       '<div class="showcase-media is-carousel is-3d-deck zp-merch"><div class="showcase-track">' +
       Array.from({length:4}, (_,i) => {
         const path = 'assets/projects/gold/merch/merch-' + String(i+1).padStart(2,'0') + (i < 2 ? '.jpg' : '.png');
-        return '<div class="showcase-slide"><img src="' + imagePath(path) + '" alt="Мерч благотворительного марафона, фото ' + (i+1) + '" loading="lazy"></div>';
+        return '<div class="showcase-slide"><img data-src="' + imagePath(path) + '" alt="Мерч благотворительного марафона, фото ' + (i+1) + '" loading="lazy"></div>';
       }).join('') + '</div></div></article>'
     : '';
   const printHtml = project.id === 'gold'
     ? '<article class="showcase-item zp-case zp-print-case"><div class="showcase-copy"><span class="eyebrow">04 / 04</span><h2>Полиграфия</h2><p>Дизайн печатных материалов для клиники «Золотое Правило»: адаптация фирменного стиля под физические носители, работа с композицией, типографикой и подготовка макетов к печати.</p></div>' +
       '<div class="showcase-media is-carousel is-3d-deck zp-print-carousel"><div class="showcase-track">' +
-      ['print-01.jpg','print-02.jpg'].map((name,i) => '<div class="showcase-slide"><img src="' + imagePath('assets/projects/gold/print/' + name) + '" alt="Полиграфия Золотое Правило, работа ' + (i+1) + '" loading="lazy"></div>').join('') +
+      ['print-01.jpg','print-02.jpg'].map((name,i) => '<div class="showcase-slide"><img data-src="' + imagePath('assets/projects/gold/print/' + name) + '" alt="Полиграфия Золотое Правило, работа ' + (i+1) + '" loading="lazy"></div>').join('') +
       '</div></div></article>'
     : '';
-  const danceImage = (path,alt) => '<div class="dance-image"><img src="' + imagePath(path) + '" alt="' + alt + '" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><div class="dance-image-placeholder" hidden>Загрузите изображение<br><small>' + escapeHtml(path.split('/').pop()) + '</small></div></div>';
+  const danceImage = (path, alt, deferred = false) => '<div class="dance-image"><img ' + (deferred ? "data-src" : "src") + '="' + imagePath(path) + '" alt="' + alt + '" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><div class="dance-image-placeholder" hidden>Загрузите изображение<br><small>' + escapeHtml(path.split('/').pop()) + '</small></div></div>';
   const danceLogo = (version, alt) => {
     const base = SITE_ROOT + 'assets/projects/dance/branding/logo-' + version;
     return '<div class="dance-image"><picture><source media="(prefers-color-scheme: dark)" srcset="' + base +
@@ -99,7 +99,7 @@ if (!project) {
       ' width="1181" height="' + (version === 'before' ? 754 : 549) + '"></picture></div>';
   };
   const danceCarousel = (paths,kind) => '<div class="dance-carousel dance-carousel-' + kind + '"><div class="dance-carousel-slides">' +
-    paths.map((path,i)=>'<div class="dance-carousel-slide"' + (i?' hidden':'') + '>' + danceImage(path,kind+' — '+(i+1)) + '</div>').join('') +
+    paths.map((path,i)=>'<div class="dance-carousel-slide"' + (i?' hidden':'') + '>' + danceImage(path,kind+' — '+(i+1),true) + '</div>').join('') +
     '</div><div class="dance-carousel-controls"><button type="button" class="dance-carousel-prev" aria-label="Предыдущее изображение">' + arrowSvg('left') + '</button><span class="dance-carousel-count">01 / ' + String(paths.length).padStart(2,'0') + '</span><button type="button" class="dance-carousel-next" aria-label="Следующее изображение">' + arrowSvg('right') + '</button></div></div>';
   const danceHtml = project.id === 'dance'
     ? '<section class="case-showcase dance-cases"><div class="section-head"><span>КЕЙСЫ</span><span>DANCE SOUL</span></div>' +
@@ -123,7 +123,7 @@ if (!project) {
         ['Даша Писанец', 'Dasha Pisanets', 'dasha.mp4'],
         ['Пантера', 'Pantera', 'pantera.mp4'],
         ['Сакура', 'Sakura', 'sakura.mp4', '720 / 1316'],
-        ['Trap Dance', 'Trap Dance', 'Афиша_Соня.mp4']
+        ['Trap Dance', 'Trap Dance', 'trap-dance.mp4']
       ].map(([ru, en, file, aspect = '9 / 16']) => {
         const name = english ? en : ru;
         const videoPath = imagePath('assets/projects/dance-posters/' + file);
@@ -143,7 +143,7 @@ if (!project) {
   const danceWebsiteHtml = project.id === 'dance-website'
     ? '<section class="dance-website-preview"><div class="section-head"><span>САЙТ ТАНЦЕВАЛЬНОЙ ШКОЛЫ</span><span>ВЕБ-ПРОЕКТ</span></div>' +
       '<p>Многостраничный сайт школы танцев с расписанием, абонементами и личным кабинетом. Разработан для танцевальной школы Алисы Шарко.</p>' +
-      '<div class="dance-site-preview"><img src="' + imagePath('assets/projects/dance-website/preview.jpg') + '" alt="Главная страница сайта танцевальной школы Алисы Шарко" loading="eager"></div>' +
+      '<div class="dance-site-preview"><img src="' + imagePath('assets/projects/dance-website/preview.jpg') + '" alt="Главная страница сайта танцевальной школы Алисы Шарко" loading="lazy"></div>' +
       '<div class="dance-site-links"><a href="https://dusyaya.github.io/dance_school_sharko/" target="_blank" rel="noopener noreferrer">Открыть сайт ' + arrowSvg('up-right') + '</a><a href="https://github.com/Dusyaya/dance_school_sharko" target="_blank" rel="noopener noreferrer">Посмотреть код на GitHub ' + arrowSvg('up-right') + '</a></div></section>'
     : '';
   const owlPath = SITE_ROOT + 'projects/owl/';
@@ -155,7 +155,7 @@ if (!project) {
     ? '<section class="baker-case"><div class="section-head"><span>ЭКРАНЫ ИГРЫ</span><span>5 ЭКРАНОВ · АВТОРСКИЕ ИЛЛЮСТРАЦИИ</span></div>' +
       '<p class="baker-description">Для мобильной игры «Весёлый Пекарь» разработала интерфейс и самостоятельно нарисовала иллюстрации: персонажей, элементы окружения и игровую графику.</p>' +
       '<div class="baker-carousel"><div class="baker-slides">' +
-      Array.from({length:5},(_,i)=>'<img src="' + imagePath('assets/projects/baker/screen-'+String(i+1).padStart(2,'0')+'.png') + '" alt="Весёлый Пекарь — экран '+(i+1)+'" loading="lazy"'+(i?' hidden':'')+'>').join('') +
+      Array.from({length:5},(_,i)=>'<img data-src="' + imagePath('assets/projects/baker/screen-'+String(i+1).padStart(2,'0')+'.png') + '" alt="Весёлый Пекарь — экран '+(i+1)+'" loading="lazy"'+(i?' hidden':'')+'>').join('') +
       '</div><div class="baker-controls"><button type="button" class="baker-prev" aria-label="Предыдущий экран">' + arrowSvg('left') + '</button><span class="baker-count">01 / 05</span><button type="button" class="baker-next" aria-label="Следующий экран">' + arrowSvg('right') + '</button></div></div></section>'
     : '';
   const extraGroups = [
@@ -166,13 +166,13 @@ if (!project) {
     ? '<section class="extra-cases"><div class="section-head"><span>ГАЛЕРЕИ РАБОТ</span><span>ИЛЛЮСТРАЦИИ / 3D</span></div>' +
       extraGroups.map((group,i)=>'<article class="extra-case"><div class="extra-case-copy"><span class="eyebrow">0'+(i+1)+' / '+String(extraGroups.length).padStart(2,'0')+'</span><h2>'+group.title+'</h2><p>'+group.description+'</p></div>' +
       '<div class="extra-carousel"><div class="extra-slides">' +
-      Array.from({length:group.count},(_,j)=>'<img src="'+imagePath('assets/projects/extra/'+group.folder+'/'+String(j+1).padStart(2,'0')+'.jpg')+'" alt="'+group.title+', работа '+(j+1)+'" loading="lazy"'+(j?' hidden':'')+'>').join('') +
+      Array.from({length:group.count},(_,j)=>'<img data-src="'+imagePath('assets/projects/extra/'+group.folder+'/'+String(j+1).padStart(2,'0')+'.jpg')+'" alt="'+group.title+', работа '+(j+1)+'" loading="lazy"'+(j?' hidden':'')+'>').join('') +
       '</div><div class="extra-controls"><button type="button" class="extra-prev" aria-label="Предыдущее изображение">' + arrowSvg('left') + '</button><span class="extra-count">01 / '+String(group.count).padStart(2,'0')+'</span><button type="button" class="extra-next" aria-label="Следующее изображение">' + arrowSvg('right') + '</button></div></div></article>').join('')+'</section>'
     : '';
   const sevstarHtml = project.id === 'sevstar'
     ? '<section class="sevstar-case"><div class="section-head"><span>ЭКРАНЫ ПРИЛОЖЕНИЯ</span><span>SMART TV · 9 ЭКРАНОВ</span></div>' +
       '<div class="sevstar-tv"><div class="sevstar-screen" tabindex="0">' +
-      Array.from({length:9},(_,i)=>'<div class="sevstar-slide"' +(i?' hidden':'')+ '><img src="' + imagePath('assets/projects/sevstar/Рисунок'+(i+1)+'.png') + '" alt="Севстар Кулинария, экран '+(i+1)+'" loading="'+(i?'lazy':'eager')+'"></div>').join('') +
+      Array.from({length:9},(_,i)=>'<div class="sevstar-slide"' +(i?' hidden':'')+ '><img data-src="' + imagePath('assets/projects/sevstar/Рисунок'+(i+1)+'.png') + '" alt="Севстар Кулинария, экран '+(i+1)+'" loading="'+(i?'lazy':'eager')+'"></div>').join('') +
       '</div></div><div class="sevstar-controls"><button type="button" class="sevstar-prev" aria-label="Предыдущий экран">' + arrowSvg('left') + '</button><span class="sevstar-counter">01 / 09</span><button type="button" class="sevstar-next" aria-label="Следующий экран">' + arrowSvg('right') + '</button></div><p class="sevstar-hint" id="sevstar-hint">' +
       (window.PORTFOLIO_LANG === "en" ? "Scroll inside the TV to explore the first screen. Click to go to the next screen." :
         "Первый экран прокручивается внутри телевизора. Нажмите на экран, чтобы перейти к следующему.") + '</p></section>'
@@ -180,7 +180,7 @@ if (!project) {
   const supertyazhHtml = project.id === 'supertyazh'
     ? (() => {
       const base = 'assets/projects/supertyazh/';
-      const image = (name, alt, className = '') => '<img class="' + className + '" src="' + imagePath(base + name) + '" alt="' + escapeHtml(alt) + '" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="supertyazh-missing" hidden>Загрузите файл ' + escapeHtml(name) + '</span>';
+      const image = (name, alt) => '<img ' + (name.startsWith("slide-") ? "data-src" : "src") + '="' + imagePath(base + name) + '" alt="' + escapeHtml(alt) + '" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="supertyazh-missing" hidden>Загрузите файл ' + escapeHtml(name) + '</span>';
       const slides = Array.from({length:11}, (_,i) => {const n=String(i+1).padStart(2,'0');return '<div class="supertyazh-slide" data-index="' + i + '"' + (i?' hidden':'') + '>' + image('slide-'+n+'.jpg','СУПЕРТЯЖ — слайд презентации '+(i+1)) + '</div>';}).join('');
       const results = Array.from({length:3}, (_,i) => {const n=String(i+1).padStart(2,'0');return '<figure class="supertyazh-work">' + image('result-'+n+'.png','СУПЕРТЯЖ — вариант рекламного макета '+(i+1)) + '<figcaption>Вариант '+(i+1)+'</figcaption></figure>';}).join('');
       const mockups = Array.from({length:2}, (_,i) => {

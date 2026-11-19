@@ -49,7 +49,7 @@ function prepareSpread(index, priority = "low") {
   if (prepared.has(index)) return;
   prepared.set(index, Promise.allSettled(images.map(image => {
     image.fetchPriority = priority;
-    image.previousElementSibling.srcset = image.dataset.original;
+    image.previousElementSibling.srcset = image.dataset.original + ".large.webp";
     image.src = image.dataset.src;
     return image.decode();
   })));

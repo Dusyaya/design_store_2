@@ -43,7 +43,7 @@ shelf.innerHTML = PROJECTS.map((project, index) => {
     '<div class="catalog-cover"><div class="catalog-cover-bar">' + WINDOW_LIGHTS + '</div>' +
     '<div class="catalog-cover-media">' + productArtwork(project) +
     '<span aria-hidden="true" class="catalog-index">' + String(index + 1).padStart(2, "0") + '</span></div></div>' +
-    '<div class="catalog-card-copy"><h3>' + projectTitle(project) + ' ' + arrowSvg("right") + '</h3>' +
+    '<div class="catalog-card-copy"><h3>' + projectTitle(project).replace(/([^ ]+)$/, '<span class="catalog-title-end">$1 ' + arrowSvg("right") + "</span>") + '</h3>' +
     '<p>' + typography(project.preview) + '</p>' +
     caseTags(project) + '</div></a>';
 }).join("");

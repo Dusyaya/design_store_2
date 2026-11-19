@@ -246,7 +246,7 @@ main { min-height: 70vh; }
 .catalog-layout { row-gap: var(--grid-gap); }
 .catalog-intro { align-self: start; min-width: 0; }
 @media (min-width: 951px) {
-  .topbar { padding-inline: calc(var(--page-inset) - clamp(16px, 1.4vw, 28px)); }
+  .topbar { padding-inline: var(--page-inset); }
   .topbar nav { gap: clamp(14px, 1.55vw, 30px); }
   .catalog-section { padding-top: clamp(32px, 2.2vw, 44px); }
   .catalog-intro { position: sticky; top: var(--sticky-offset, 64px); }
@@ -313,6 +313,7 @@ main { min-height: 70vh; }
 .catalog-card[data-project="supertyazh"] .catalog-cover img { border-radius: var(--image-radius); width: 76%; height: 73%; }
 .catalog-card-copy { padding: 10px 2px 0; }
 .catalog-card h3 { margin: 0 0 5px; font-size: clamp(17px, 1.34vw, 22px); line-height: 1.28; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.catalog-title-end { white-space: nowrap; }
 .catalog-card h3 svg { width: .8em; height: .8em; }
 .catalog-card p { margin: 0; color: var(--muted); font-size: clamp(14px, 1.08vw, 16px); line-height: 1.62; overflow-wrap: anywhere; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
@@ -1097,6 +1098,8 @@ body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
 .case .zp-print-carousel.portfolio-showcase-deck .image-carousel-controls,
 .case .image-carousel-controls.image-carousel-controls {
   margin-top: calc(var(--carousel-controls-gap) - var(--carousel-track-bottom, 0px)) !important;
+  position: relative;
+  z-index: 65;
   padding-block: 0;
 }
 @media (max-width: 760px) {
@@ -1178,4 +1181,24 @@ body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
   .case-hero-windows { width: min(100%, 630px); justify-self: center; }
   .case-hero-windows .window-bar { gap: 5px; padding-inline: 6px; }
   .case-hero-windows .window-lights { gap: 3px; }
+}
+
+
+@media (max-width: 760px) {
+  .zp-cases .zp-print-carousel.portfolio-showcase-deck .showcase-track {
+    height: auto !important;
+    aspect-ratio: 3507 / 2480;
+  }
+
+  .zp-cases .zp-print-carousel.portfolio-showcase-deck .showcase-slide {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    max-height: none !important;
+    aspect-ratio: auto;
+  }
+
+  .zp-cases .zp-print-carousel.portfolio-showcase-deck .showcase-slide:not(.portfolio-active) {
+    visibility: hidden !important;
+  }
 }

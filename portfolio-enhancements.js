@@ -34,7 +34,7 @@
   function originalImageUrl(thumbnail) {
     return thumbnail
       .replace(/(\.jpe?g|\.png)\.webp$/i, "$1")
-      .replace(/(\/project-covers\/cover-\d+)(?:-hero)?\.webp$/i, "$1.png");
+      .replace(/(\/project-covers\/cover-\d+)(?:-hero|-case)?\.webp$/i, "$1.png");
   }
 
   function setPreviewLayout(image) {
@@ -191,8 +191,10 @@
       const images = slides.map(slide => slide.matches("img") ? slide : slide.querySelector("img"));
       images.forEach(image => {
         carouselImages.add(image);
-        image.dataset.src = image.getAttribute("src");
-        image.removeAttribute("src");
+        if (image.hasAttribute("src")) {
+          image.dataset.src = image.getAttribute("src");
+          image.removeAttribute("src");
+        }
       });
 
       const screen = carousel.querySelector(".sevstar-screen");
@@ -216,6 +218,7 @@
       const controls = previous.parentElement;
       if (!screen) controls.classList.add("image-carousel-controls");
       let active = 0;
+      let ready = false;
 
       function alignSlides() {
         const front = images[active];
@@ -258,7 +261,13 @@
           slide.inert = offstage;
           slide.setAttribute("aria-hidden", String(offstage));
           const image = images[position];
-          if (!offstage && !image.hasAttribute("src")) image.src = image.dataset.src;
+          if (ready && !offstage && !image.hasAttribute("src")) {
+            image.loading = "eager";
+            image.fetchPriority = selected ? "auto" : "low";
+            image.src = image.dataset.src;
+          } else if (selected) {
+            image.fetchPriority = "auto";
+          }
           if (!screen) labelImage(image, selected ? labels.zoom : labels.select, !offstage);
         });
         counter.textContent = formatCount(active, slides.length);
@@ -270,7 +279,10 @@
         }
       }
 
-      const step = offset => show(active + offset);
+      const step = offset => {
+        ready = true;
+        show(active + offset);
+      };
       previous.addEventListener("click", () => step(-1));
       next.addEventListener("click", () => step(1));
       carousel.addEventListener("keydown", event => {
@@ -297,6 +309,13 @@
         }));
       }
       show(0);
+      const loadObserver = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        ready = true;
+        show(active);
+        loadObserver.disconnect();
+      }, {rootMargin: "420px 0px"});
+      loadObserver.observe(track);
     });
   });
 
@@ -311,7 +330,7 @@
   }
 
   root.querySelectorAll("img").forEach(image => {
-    if (carouselImages.has(image) || image.closest(".print-book, .dance-poster-open")) return;
+    if (carouselImages.has(image) || image.closest(".print-book, .case-hero")) return;
     labelImage(image, labels.zoom);
     bindImage(image, () => openPreview([image], 0));
   });
