@@ -260,10 +260,10 @@ main { min-height: 70vh; }
 }
 .catalog-count { margin: 20px 0 14px; color: var(--muted); font-size: 15px; }
 .catalog-intro .filters { display: grid; gap: 6px; margin: 0; }
-.filter-row { display: flex; gap: clamp(4px, .5vw, 8px); }
+.filter-row { display: flex; flex-wrap: wrap; gap: clamp(4px, .5vw, 8px); }
 .catalog-intro .filters button {
   min-height: 44px;
-  padding: 5px clamp(6px, .7vw, 12px);
+  padding: 5px clamp(9px, 1vw, 18px);
   background: transparent;
   color: var(--text);
   border: 1px solid var(--control-border);
@@ -368,7 +368,7 @@ main { min-height: 70vh; }
   align-items: center;
   gap: 9px;
   min-height: 44px;
-  padding: 7px 14px;
+  padding: 7px 19px;
   border: 1px solid var(--control-border);
   border-radius: 999px;
   font-size: var(--control-text-size);
@@ -622,7 +622,7 @@ footer {
 .case .project-navigation a {
   width: fit-content !important;
   max-width: min(100%, 29rem);
-  padding: 7px clamp(14px, 1.4vw, 22px) !important;
+  padding: 7px clamp(16px, 1.8vw, 28px) !important;
   gap: clamp(6px, 1vw, 14px) !important;
   justify-content: flex-start !important;
   min-height: 44px;
@@ -784,7 +784,7 @@ body.lightbox-open { overflow: hidden; }
   }
   .about .next {
     min-height: 44px;
-    padding: 5px 8px;
+    padding: 5px 12px;
     font-size: 12px;
     line-height: 1.25;
     text-wrap: balance;
@@ -798,7 +798,7 @@ body.lightbox-open { overflow: hidden; }
 }
 @media (max-width: 380px) {
   .about .social-links { gap: 3px; }
-  .about .next { gap: 4px; padding-inline: 6px; font-size: 11px; }
+  .about .next { gap: 4px; padding-inline: 9px; font-size: 11px; }
   .about .next svg { width: 12px; height: 12px; }
 }
 .case .zp-cases .zp-presentation-layout { grid-template-columns: minmax(0, 1fr) !important; gap: 14px !important; }
@@ -1118,12 +1118,18 @@ body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
 .poster-hero-windows .case-cover-artwork { width: 100%; }
 .case-hero-windows .case-cover-front.is-landscape { grid-column: 3 / 13; }
 .case-hero-windows.has-one-side .case-cover-front { grid-column: 4 / 15; }
-.case-hero-windows:not(.poster-hero-windows) .case-side-window .case-cover-media {
+.case-hero-windows .case-side-window .case-cover-media {
+  display: block;
+  padding: 0;
   min-height: 0;
-  aspect-ratio: .82;
+  aspect-ratio: auto;
 }
-.case-side-window img { display: block; width: 100%; height: 100%; position: absolute; inset: 0; object-fit: contain; padding: var(--cover-padding); }
-.case-side-window .case-cover-media { position: relative; }
+.case .case-side-window img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0 !important;
+}
 @media (max-width: 950px) {
   .case .case-hero:has(.poster-hero-windows) { grid-template-columns: minmax(0, 1fr); }
   .case-hero-windows { width: min(100%, 630px); justify-self: center; }

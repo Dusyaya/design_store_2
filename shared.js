@@ -195,17 +195,16 @@ const CASE_HERO_IMAGES = {
     ["dance/merch/merch-02.jpg", "Мерч", "Merchandise"]
   ],
   book: [
-    ["book/006.jpg", "Страница книги", "Book page"],
-    ["book/014.jpg", "Страница книги", "Book page"]
+    ["book/обложка1.jpg", "Обложка книги", "Book cover"],
+    ["book/hero-spread.jpg", "Нахимовское училище", "Nakhimov Naval School"]
   ],
   supertyazh: [
     ["supertyazh/mockup-01.jpg", "Уличный мокап", "Outdoor mockup"],
     ["supertyazh/mockup-02.jpg", "Мокап в помещении", "Indoor mockup"]
   ],
-  "dance-website": [["dance-website/preview.jpg", "Дизайн сайта", "Website design"]],
-  sevstar: [
-    ["sevstar/Рисунок2.png", "Экран приложения", "App screen"],
-    ["sevstar/Рисунок5.png", "Экран приложения", "App screen"]
+  "dance-website": [
+    ["dance-website/about.jpg", "О нас", "About us"],
+    ["dance-website/memberships.jpg", "Абонементы и направления", "Memberships and classes"]
   ],
   "dance-posters": [
     ["dance-posters/hero-dasha.webp", "Даша Писанец", "Dasha Pisanets"],
@@ -219,7 +218,6 @@ const CASE_HERO_IMAGES = {
     ["baker/screen-02.png", "Игровой экран", "Game screen"],
     ["baker/screen-04.png", "Игровой экран", "Game screen"]
   ],
-  owl: [["projects/owl/owl-hero-detail.webp", "Первый экран сайта", "Landing page", "projects/owl/Сова и Лисенок.png"]],
   babushka: [
     ["babushka/Babushka4.jpg", "Страница зина", "Zine page"],
     ["babushka/Babushka11.jpg", "Страница зина", "Zine page"]
@@ -233,7 +231,9 @@ function caseCover(project) {
   const artHeight = bottom - top;
   const cover = '<figure class="case-cover floating-window case-cover-front' + (landscape ? ' is-landscape' : '') +
     '" style="--cover-ratio:' + artWidth / artHeight + '">' +
-    windowBar(project.name + ".png") +
+    windowBar(project.id === "dance-posters"
+      ? (window.PORTFOLIO_LANG === "en" ? "Posters" : "Афиши")
+      : project.name + ".png") +
     '<div class="case-cover-media"><div class="case-cover-artwork"><img src="' + coverBase(project) +
     '.png" alt="' + escapeHtml(project.name) + '" width="' + width + '" height="' + height +
     '" style="--image-width:' + width / artWidth * 100 + '%;--image-left:' + -left / artWidth * 100 +
@@ -242,7 +242,7 @@ function caseCover(project) {
   if (!images) return cover;
   const renderSide = ([file, ru, en, original], side) => {
     const name = window.PORTFOLIO_LANG === "en" ? en : ru;
-    const path = file.startsWith("projects/") ? file : "assets/projects/" + file;
+    const path = "assets/projects/" + file;
     return '<figure class="case-cover floating-window case-side-window is-' + side + '">' +
       windowBar(name) + '<div class="case-cover-media"><img src="' + escapeHtml(imagePath(path)) +
       '" alt="' + escapeHtml(name) + '"' +
