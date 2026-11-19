@@ -33,6 +33,16 @@ document.querySelector("#about .about-text").innerHTML =
 document.querySelector("#about .next").innerHTML = escapeHtml(SITE.about.button.replace(/ ↗/g,"")) + " " + iconArrowUpRight();
 document.querySelector("#about .next").href = telegramContactUrl();
 document.querySelector("#about .contact-links").innerHTML = socialLinks();
+const emailContact = document.querySelector(".email-contact");
+document.addEventListener("click", event => {
+  if (emailContact.open && !emailContact.contains(event.target)) emailContact.open = false;
+}, {capture: true});
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape" || !emailContact.open || document.querySelector("dialog[open]")) return;
+  const restoreFocus = emailContact.contains(document.activeElement);
+  emailContact.open = false;
+  if (restoreFocus) emailContact.querySelector("summary").focus({preventScroll: true});
+});
 
 let activeFilter = catalog.filters[0];
 const shelf = document.querySelector("#shelf");
