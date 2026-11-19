@@ -289,7 +289,7 @@ function visibleTextBounds(container, selector) {
   });
 }
 
-function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edgeGap = 0, overflowRatio = .2, avoid = [], textOverlapRatio = 0} = {}) {
+function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edgeGap = 0, overflowRatio = .2, avoid = [], textOverlapRatio = 0, upperArea} = {}) {
   const image = item.querySelector("img.portfolio-zoomable");
   const control = image || item.querySelector(".window-bar");
   if (!image) control.tabIndex = 0;
@@ -299,11 +299,11 @@ function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edge
     : "Перетащите окно или переместите его стрелками. Escape возвращает окно на место.";
   const zoom = image ? (english ? " Press Enter to enlarge." : " Нажмите Enter, чтобы увеличить изображение.") : "";
   control.setAttribute("aria-description", movement + zoom);
-  enableFloatingItem(item, area, {returnToOrigin, returnAt, followScroll: true, edgeGap, overflowRatio, avoid, textOverlapRatio});
+  enableFloatingItem(item, area, {returnToOrigin, returnAt, followScroll: true, edgeGap, overflowRatio, avoid, textOverlapRatio, upperArea});
 }
 
 function enableFloatingItem(item, area, {
-  returnToOrigin = false, returnAt, followScroll = false, edgeGap = 0, overflowRatio = .2, activationTarget = item, avoid = [], textOverlapRatio = 0
+  returnToOrigin = false, returnAt, followScroll = false, edgeGap = 0, overflowRatio = .2, activationTarget = item, avoid = [], textOverlapRatio = 0, upperArea
 } = {}) {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const shouldReturn = () => returnToOrigin || returnAt?.matches;
@@ -339,7 +339,10 @@ function enableFloatingItem(item, area, {
       const driftX = style.animationName === "none" ? 0 : Math.abs(parseFloat(style.getPropertyValue("--drift-x")) || 20);
       const driftY = style.animationName === "none" ? 0 : Math.abs(parseFloat(style.getPropertyValue("--drift-y")) || 18);
 
-      // Side overlap spans the existing vertical travel range.
+      const upperBounds = upperArea?.();
+      if (upperBounds) minY = upperBounds.getBoundingClientRect().top - originTop + driftY;
+
+      // Боковое наложение доступно по всей высоте перемещения.
       const clearanceX = driftX - rect.width * textOverlapRatio;
 
       for (const text of avoid) {
@@ -351,7 +354,7 @@ function enableFloatingItem(item, area, {
         const south = originTop - box.bottom;
         const horizontal = Math.max(west, east);
         const vertical = Math.max(north, south);
-        if (vertical >= -1 && (horizontal < -1 || vertical <= horizontal)) {
+        if (vertical >= -1 && (horizontal < -1 || (!upperBounds && vertical <= horizontal))) {
           if (north >= -1) maxY = Math.min(maxY, north - driftY);
           else minY = Math.max(minY, driftY - south);
         } else if (horizontal >= -1) {

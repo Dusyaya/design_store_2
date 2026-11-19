@@ -315,6 +315,7 @@
     labelImage(image, labels.zoom);
     bindImage(image, () => openPreview([image], 0));
   });
+  const stackedHero = matchMedia("(max-width: 950px)");
   root.querySelectorAll(".floating-window").forEach(item => {
     const hero = item.closest(".case-hero");
     const area = hero || item.closest(".case");
@@ -325,7 +326,8 @@
     enableFloatingWindow(item, area, {
       returnToOrigin: !hero,
       avoid,
-      textOverlapRatio: hero ? .1 : 0
+      textOverlapRatio: hero ? .1 : 0,
+      upperArea: hero ? () => stackedHero.matches ? null : root : undefined
     });
   });
 })();
