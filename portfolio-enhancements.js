@@ -318,10 +318,14 @@
   root.querySelectorAll(".floating-window").forEach(item => {
     const hero = item.closest(".case-hero");
     const area = hero || item.closest(".case");
-    const text = hero ? ".case-summary" : ".section-head, .case-rows, .project-navigation";
+    const avoid = hero
+      ? [...visibleTextBounds(hero, ".case-summary .eyebrow, .case-summary h1, .case-intro p"),
+        ...hero.querySelectorAll(".case-summary .tag")]
+      : area.querySelectorAll(".section-head, .case-rows, .project-navigation");
     enableFloatingWindow(item, area, {
       returnToOrigin: !hero,
-      avoid: area.querySelectorAll(text)
+      avoid,
+      textOverlapRatio: hero ? .2 : 0
     });
   });
 })();

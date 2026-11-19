@@ -93,23 +93,24 @@ function updateFilters() {
 }
 renderCatalog();
 updateFilters();
-initSkillBadges();
 
 const about = document.querySelector("#about");
 // Граница проходит по видимому содержимому, включая кнопки связи.
-const aboutTextBounds = Array.from(about.querySelectorAll(".section-head, .about-copy h2, .about-text p"), element => {
-  const range = document.createRange();
-  range.selectNodeContents(element);
-  return range;
-});
+const aboutTextBounds = visibleTextBounds(about, ".section-head, .about-copy h2, .about-text p");
 enableFloatingWindow(about.querySelector(".about-portrait"), about, {
   returnToOrigin: false,
   returnAt: matchMedia("(max-width: 760px)"),
-  avoid: [...aboutTextBounds, ...about.querySelectorAll(".about-actions a")]
+  avoid: [...aboutTextBounds, ...about.querySelectorAll(".about-actions a")],
+  textOverlapRatio: .2
 });
 
 const heroSection = document.querySelector(".portfolio-hero");
-enableFloatingWindow(heroSection.querySelector(".portrait-window"), heroSection, {avoid: heroSection.querySelectorAll(".portfolio-intro, .portfolio-heading h1, .portfolio-year")});
+const heroTextBounds = visibleTextBounds(heroSection, ".portfolio-intro h2, .portfolio-intro p, .portfolio-skills li, .portfolio-heading h1, .portfolio-year");
+enableFloatingWindow(heroSection.querySelector(".portrait-window"), heroSection, {
+  avoid: heroTextBounds,
+  textOverlapRatio: .2
+});
+initSkillBadges();
 
 function initSkillBadges() {
   const orbit = document.querySelector(".skill-orbit");
@@ -128,6 +129,6 @@ function initSkillBadges() {
   for (const badge of badges) {
     const label = badge.querySelector(".skill-badge-visual > span:last-child").textContent;
     badge.setAttribute("aria-label", label);
-    enableFloatingItem(badge, orbit, {returnAt: mobile});
+    enableFloatingItem(badge, orbit, {returnAt: mobile, avoid: heroTextBounds, textOverlapRatio: .2});
   }
 }

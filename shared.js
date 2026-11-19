@@ -281,7 +281,15 @@ function caseTags(project) {
     '<span class="tag">' + typography(tag) + '</span>').join("") + '</div>';
 }
 
-function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edgeGap = 0, overflowRatio = .2, avoid = []} = {}) {
+function visibleTextBounds(container, selector) {
+  return Array.from(container.querySelectorAll(selector), element => {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    return range;
+  });
+}
+
+function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edgeGap = 0, overflowRatio = .2, avoid = [], textOverlapRatio = 0} = {}) {
   const image = item.querySelector("img.portfolio-zoomable");
   const control = image || item.querySelector(".window-bar");
   if (!image) control.tabIndex = 0;
@@ -291,11 +299,11 @@ function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edge
     : "Перетащите окно или переместите его стрелками. Escape возвращает окно на место.";
   const zoom = image ? (english ? " Press Enter to enlarge." : " Нажмите Enter, чтобы увеличить изображение.") : "";
   control.setAttribute("aria-description", movement + zoom);
-  enableFloatingItem(item, area, {returnToOrigin, returnAt, followScroll: true, edgeGap, overflowRatio, avoid});
+  enableFloatingItem(item, area, {returnToOrigin, returnAt, followScroll: true, edgeGap, overflowRatio, avoid, textOverlapRatio});
 }
 
 function enableFloatingItem(item, area, {
-  returnToOrigin = false, returnAt, followScroll = false, edgeGap = 0, overflowRatio = .2, activationTarget = item, avoid = []
+  returnToOrigin = false, returnAt, followScroll = false, edgeGap = 0, overflowRatio = .2, activationTarget = item, avoid = [], textOverlapRatio = 0
 } = {}) {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const shouldReturn = () => returnToOrigin || returnAt?.matches;
@@ -331,6 +339,9 @@ function enableFloatingItem(item, area, {
       const driftX = style.animationName === "none" ? 0 : Math.abs(parseFloat(style.getPropertyValue("--drift-x")) || 20);
       const driftY = style.animationName === "none" ? 0 : Math.abs(parseFloat(style.getPropertyValue("--drift-y")) || 18);
 
+      const clearanceX = driftX - rect.width * textOverlapRatio;
+      const clearanceY = driftY - rect.height * textOverlapRatio;
+
       for (const text of avoid) {
         if (!text.getClientRects().length) continue;
         const box = text.getBoundingClientRect();
@@ -341,11 +352,11 @@ function enableFloatingItem(item, area, {
         const horizontal = Math.max(west, east);
         const vertical = Math.max(north, south);
         if (vertical >= -1 && (horizontal < -1 || vertical <= horizontal)) {
-          if (north >= -1) maxY = Math.min(maxY, north - driftY);
-          else minY = Math.max(minY, driftY - south);
+          if (north >= -1) maxY = Math.min(maxY, north - clearanceY);
+          else minY = Math.max(minY, clearanceY - south);
         } else if (horizontal >= -1) {
-          if (west >= -1) maxX = Math.min(maxX, west - driftX);
-          else minX = Math.max(minX, driftX - east);
+          if (west >= -1) maxX = Math.min(maxX, west - clearanceX);
+          else minX = Math.max(minX, clearanceX - east);
         }
       }
     }
