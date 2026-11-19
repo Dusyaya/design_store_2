@@ -61,10 +61,10 @@
   panel.setAttribute("aria-labelledby", "analytics-consent-title");
   panel.innerHTML = '<h2 id="analytics-consent-title">' + copy.title + '</h2><p>' + copy.message +
     '</p><a href="https://yandex.ru/legal/confidential/" target="_blank" rel="noopener noreferrer">' +
-    copy.privacy + '</a><div class="cookie-actions"><button type="button">' + copy.decline +
-    '</button><button type="button">' + copy.accept + '</button></div>';
+    copy.privacy + '</a><div class="cookie-actions"><button type="button" class="cookie-accept">' + copy.accept +
+    '</button><button type="button">' + copy.decline + '</button></div>';
   document.body.append(panel);
-  const [decline, accept] = panel.querySelectorAll("button");
+  const [accept, decline] = panel.querySelectorAll("button");
 
   function showPanel(open) {
     panel.hidden = !open;

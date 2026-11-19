@@ -1254,3 +1254,14 @@ footer:has(.cookie-settings) {
 .cookie-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .cookie-actions button { flex: 1 1 auto; }
 .cookie-actions button:hover { background: var(--hover); }
+
+.cookie-actions .cookie-accept {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+.cookie-actions .cookie-accept:hover { background: #282828; }
+
+@media (max-width: 760px) {
+  .cookie-actions { flex-direction: column; }
+}
