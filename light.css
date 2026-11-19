@@ -365,7 +365,7 @@ main { min-height: 70vh; }
 }
 .social-icon[src$="telegram.svg"] { filter: brightness(0); }
 .about .next { flex: 0 1 auto; font-weight: 700; white-space: nowrap; }
-.about .contact-links .social-links a, .about .next {
+.about .contact-links :is(.social-links > a, .email-contact > summary), .about .next {
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -377,7 +377,7 @@ main { min-height: 70vh; }
   background: transparent;
   color: var(--text);
 }
-.about .contact-links .social-links a:hover, .about .next:hover {
+.about .contact-links :is(.social-links > a, .email-contact > summary):hover, .about .next:hover {
   border-color: var(--text);
   background: var(--hover);
   color: var(--text);
@@ -770,13 +770,13 @@ body.lightbox-open { overflow: hidden; }
 
 @container (max-width: 780px) {
   .about .social-links { gap: 5px; }
-  .about .contact-links .social-links a {
+  .about .contact-links :is(.social-links > a, .email-contact > summary) {
     justify-content: center;
     width: 44px;
     min-height: 44px;
     padding: 0;
   }
-  .about .social-links a span {
+  .about :is(.social-links > a, .email-contact > summary) span {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -1264,4 +1264,45 @@ footer:has(.cookie-settings) {
 
 @media (max-width: 760px) {
   .cookie-actions { flex-direction: column; }
+}
+
+
+.email-contact { position: relative; }
+.email-contact summary { list-style: none; cursor: pointer; }
+.email-contact summary::-webkit-details-marker { display: none; }
+.email-contact-options {
+  position: absolute;
+  z-index: 5;
+  bottom: calc(100% + 8px);
+  inset-inline-end: 0;
+  display: grid;
+  min-width: max-content;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 6px 18px #0002;
+  font-size: var(--control-text-size);
+}
+.email-contact-options a, .email-address { padding: 7px 10px; }
+.email-contact-options a:hover { background: var(--hover); }
+.email-address { color: var(--muted); user-select: all; }
+
+.case:has(.case-details-link) .case-hero {
+  margin-bottom: calc(var(--section-space) / 2);
+}
+.case-details-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-inline: auto;
+  padding: 8px 12px;
+  color: var(--muted);
+  font-size: var(--body-size);
+}
+.case-details-link:hover { color: var(--text); }
+.case .case-details-link + .case-rows {
+  margin-top: calc(var(--section-space) / 2);
+  scroll-margin-top: calc(var(--sticky-offset, 64px) + 52px);
 }

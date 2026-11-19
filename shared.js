@@ -1,6 +1,6 @@
 function iconArrowUpRight(){return '<svg class="ui-arrow ui-arrow-up-right" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg>';}
 // Общие функции для всех страниц.
-const arrowSvg = direction => '<svg class="ui-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="' + (direction === 'left' ? 'M19 12H5m7 7-7-7 7-7' : direction === 'up-right' ? 'M7 17 17 7M8 7h9v9' : 'M5 12h14m-7-7 7 7-7 7') + '"/></svg>';
+const arrowSvg = direction => '<svg class="ui-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="' + (direction === 'left' ? 'M19 12H5m7 7-7-7 7-7' : direction === 'down' ? 'M12 5v14m-7-7 7 7 7-7' : direction === 'up-right' ? 'M7 17 17 7M8 7h9v9' : 'M5 12h14m-7-7 7 7-7 7') + '"/></svg>';
 const SITE_ROOT = document.documentElement.dataset.root || "./";
 const SITE = window.SITE_CONTENT;
 const PROJECTS = window.PORTFOLIO_PROJECTS;
@@ -85,27 +85,41 @@ function whatsappContactUrl() {
   return SITE.contacts.whatsapp + "?text=" + encodeURIComponent(contactMessage());
 }
 
-// Почтовый обработчик выбирает браузер или операционная система.
-function emailContactUrl() {
-  return "mailto:" + SITE.contacts.email +
-    "?subject=" + encodeURIComponent(window.PORTFOLIO_LANG === "en" ? "Design project inquiry" : "Запрос на дизайн-проект") +
-    "&body=" + encodeURIComponent(contactMessage());
+function emailContactOptions() {
+  const english = window.PORTFOLIO_LANG === "en";
+  const address = encodeURIComponent(SITE.contacts.email);
+  const subject = encodeURIComponent(english ? "Design project inquiry" : "Запрос на дизайн-проект");
+  const body = encodeURIComponent(contactMessage());
+  const fields = "to=" + address + "&subject=" + subject + "&body=" + body;
+  const webMail = [
+    ["Gmail", "https://mail.google.com/mail/?view=cm&fs=1&to=" + address + "&su=" + subject + "&body=" + body],
+    [english ? "Yandex Mail" : "Яндекс Почта", "https://mail.yandex.ru/compose?" + fields],
+    ["Mail.ru", "https://e.mail.ru/compose/?" + fields]
+  ];
+  return '<details class="email-contact"><summary>' + socialIcon("mail-filled") + '<span>' +
+    (english ? "Email" : "Почта") + '</span></summary><div class="email-contact-options"><a href="mailto:' +
+    escapeHtml(SITE.contacts.email + "?subject=" + subject + "&body=" + body) + '">' +
+    (english ? "Default mail app" : "Почта по умолчанию") + '</a>' +
+    webMail.map(([name, url]) => '<a href="' + escapeHtml(url) +
+      '" target="_blank" rel="noopener noreferrer">' + name + '</a>').join("") +
+    '<span class="email-address">' + escapeHtml(SITE.contacts.email) + '</span></div></details>';
+}
+
+function socialIcon(icon) {
+  return '<img class="social-icon" src="' + SITE_ROOT + 'assets/icons/' + icon +
+    '.svg" alt="" width="22" height="22" loading="lazy">';
 }
 
 function socialLinks() {
   const links = [
     ["Telegram", telegramContactUrl(), "telegram"],
     ["Instagram", SITE.contacts.instagram, "instagram-filled"],
-    ["WhatsApp", whatsappContactUrl(), "whatsapp-filled"],
-    [window.PORTFOLIO_LANG === "en" ? "Email" : "Почта", emailContactUrl(), "mail-filled"]
+    ["WhatsApp", whatsappContactUrl(), "whatsapp-filled"]
   ];
-  return '<div class="social-links">' +
-    links.map(([name, url, icon]) =>
-      '<a href="' + escapeHtml(url) + '"' + (icon === "mail-filled" ? "" : ' target="_blank" rel="noopener noreferrer"') + '>' +
-      '<img class="social-icon" src="' + SITE_ROOT + 'assets/icons/' + icon +
-      '.svg" alt="" width="22" height="22" loading="lazy">' +
-      '<span>' + name + '</span></a>'
-    ).join("") + '</div>';
+  return '<div class="social-links">' + links.map(([name, url, icon]) =>
+    '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' +
+    socialIcon(icon) + '<span>' + name + '</span></a>'
+  ).join("") + emailContactOptions() + '</div>';
 }
 
 function renderLayout() {

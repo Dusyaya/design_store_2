@@ -100,7 +100,7 @@ const aboutTextBounds = visibleTextBounds(about, ".section-head, .about-copy h2,
 enableFloatingWindow(about.querySelector(".about-portrait"), about, {
   returnToOrigin: false,
   returnAt: matchMedia("(max-width: 760px)"),
-  avoid: [...aboutTextBounds, ...about.querySelectorAll(".about-actions a")],
+  avoid: [...aboutTextBounds, ...about.querySelectorAll(".about-actions a, .email-contact summary")],
   textOverlapRatio: .1
 });
 

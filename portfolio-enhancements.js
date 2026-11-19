@@ -2,6 +2,12 @@
 (function () {
   const root = document.querySelector("main");
   const english = window.PORTFOLIO_LANG === "en";
+  const caseRows = root.querySelector(".case > .case-rows");
+  if (caseRows) {
+    caseRows.id = "project-details";
+    caseRows.insertAdjacentHTML("beforebegin", '<a class="case-details-link" href="#project-details">' +
+      (english ? "More about the project" : "Подробнее о проекте") + arrowSvg("down") + '</a>');
+  }
   const labels = english
     ? {previous: "Previous image", next: "Next image", close: "Close", preview: "Image preview", zoom: "Zoom image", select: "Select slide"}
     : {previous: "Предыдущее изображение", next: "Следующее изображение", close: "Закрыть", preview: "Просмотр изображения", zoom: "Увеличить изображение", select: "Выбрать слайд"};
