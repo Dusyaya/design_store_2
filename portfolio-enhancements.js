@@ -325,7 +325,7 @@
     enableFloatingWindow(item, area, {
       returnToOrigin: !hero,
       avoid,
-      textOverlapRatio: hero ? .2 : 0
+      textOverlapRatio: hero ? .1 : 0
     });
   });
 })();

@@ -339,8 +339,8 @@ function enableFloatingItem(item, area, {
       const driftX = style.animationName === "none" ? 0 : Math.abs(parseFloat(style.getPropertyValue("--drift-x")) || 20);
       const driftY = style.animationName === "none" ? 0 : Math.abs(parseFloat(style.getPropertyValue("--drift-y")) || 18);
 
+      // Side overlap spans the existing vertical travel range.
       const clearanceX = driftX - rect.width * textOverlapRatio;
-      const clearanceY = driftY - rect.height * textOverlapRatio;
 
       for (const text of avoid) {
         if (!text.getClientRects().length) continue;
@@ -352,8 +352,8 @@ function enableFloatingItem(item, area, {
         const horizontal = Math.max(west, east);
         const vertical = Math.max(north, south);
         if (vertical >= -1 && (horizontal < -1 || vertical <= horizontal)) {
-          if (north >= -1) maxY = Math.min(maxY, north - clearanceY);
-          else minY = Math.max(minY, clearanceY - south);
+          if (north >= -1) maxY = Math.min(maxY, north - driftY);
+          else minY = Math.max(minY, driftY - south);
         } else if (horizontal >= -1) {
           if (west >= -1) maxX = Math.min(maxX, west - clearanceX);
           else minX = Math.max(minX, clearanceX - east);

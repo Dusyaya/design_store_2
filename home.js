@@ -101,14 +101,14 @@ enableFloatingWindow(about.querySelector(".about-portrait"), about, {
   returnToOrigin: false,
   returnAt: matchMedia("(max-width: 760px)"),
   avoid: [...aboutTextBounds, ...about.querySelectorAll(".about-actions a")],
-  textOverlapRatio: .2
+  textOverlapRatio: .1
 });
 
 const heroSection = document.querySelector(".portfolio-hero");
 const heroTextBounds = visibleTextBounds(heroSection, ".portfolio-intro h2, .portfolio-intro p, .portfolio-skills li, .portfolio-heading h1, .portfolio-year");
 enableFloatingWindow(heroSection.querySelector(".portrait-window"), heroSection, {
   avoid: heroTextBounds,
-  textOverlapRatio: .2
+  textOverlapRatio: .1
 });
 initSkillBadges();
 
@@ -129,6 +129,6 @@ function initSkillBadges() {
   for (const badge of badges) {
     const label = badge.querySelector(".skill-badge-visual > span:last-child").textContent;
     badge.setAttribute("aria-label", label);
-    enableFloatingItem(badge, orbit, {returnAt: mobile, avoid: heroTextBounds, textOverlapRatio: .2});
+    enableFloatingItem(badge, orbit, {returnAt: mobile, avoid: heroTextBounds, textOverlapRatio: .1});
   }
 }
