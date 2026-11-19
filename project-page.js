@@ -132,7 +132,7 @@ if (!project) {
           '" data-video="' + escapeHtml(videoPath) + '" data-title="' + escapeHtml(name) +
           '" aria-label="' + (english ? 'Play ' : 'Воспроизвести ') + escapeHtml(name) + '">' +
           '<img src="' + escapeHtml(videoPath.replace(/\.mp4$/, '.webp')) + '" alt="">' +
-          '<span aria-hidden="true">▶</span></button></figure>';
+          '<span aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span></button></figure>';
       }).join('') + '</div>'
     : '';
   const posterDialog = posterWindows

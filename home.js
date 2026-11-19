@@ -95,7 +95,7 @@ updateFilters();
 initSkillBadges();
 
 const about = document.querySelector("#about");
-enableFloatingWindow(about.querySelector(".about-portrait"), about, {returnToOrigin: false});
+enableFloatingWindow(about.querySelector(".about-portrait"), about, {returnToOrigin: false, returnAt: matchMedia("(max-width: 760px)")});
 
 const heroSection = document.querySelector(".portfolio-hero");
 enableFloatingWindow(heroSection.querySelector(".portrait-window"), heroSection, {edgeGap: 0});

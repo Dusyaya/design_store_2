@@ -189,7 +189,7 @@
     'Предыдущий слайд':'Previous slide','Следующий слайд':'Next slide',
     'Предыдущее изображение':'Previous image','Следующее изображение':'Next image',
     'Предыдущий экран':'Previous screen','Следующий экран':'Next screen',
-    'ИНТЕРАКТИВНАЯ КНИГА':'INTERACTIVE BOOK','ТВЁРДЫЙ ПЕРЕПЛЁТ':'HARDCOVER',
+    'ИНТЕРАКТИВНАЯ КНИГА':'INTERACTIVE BOOK','КНИГА В ТВЁРДОМ ПЕРЕПЛЁТЕ':'HARDCOVER BOOK','40 СТРАНИЦ':'40 PAGES','ТВЁРДЫЙ ПЕРЕПЛЁТ':'HARDCOVER',
     'Листать назад':'Previous spread','Листать вперед':'Next spread',
     'Интерактивная книга':'Interactive book','Интерактивный журнал BABUSHKA':'Interactive BABUSHKA zine',
     'Предыдущий разворот':'Previous spread','Следующий разворот':'Next spread',

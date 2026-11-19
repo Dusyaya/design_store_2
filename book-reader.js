@@ -42,19 +42,23 @@ let busy = false;
 
 const prepared = new Map();
 
-function prepareSpread(index) {
-  if (index < 0 || index >= spreads.length || prepared.has(index)) return;
+function prepareSpread(index, priority = "low") {
+  if (index < 0 || index >= spreads.length) return;
   const images = [...spreads[index].querySelectorAll("img")];
+  if (priority === "high") images.forEach(image => { image.fetchPriority = "high"; });
+  if (prepared.has(index)) return;
   prepared.set(index, Promise.allSettled(images.map(image => {
+    image.fetchPriority = priority;
     image.previousElementSibling.srcset = image.dataset.original;
     image.src = image.dataset.src;
     return image.decode();
   })));
 }
 
-function prefetchAdjacent() {
+function prefetchAdjacent(direction = 1) {
   prepareSpread(current - 1);
   prepareSpread(current + 1);
+  if (printProject.id === "book") prepareSpread(current + 2 * direction);
 }
 
 function showSpread() {
@@ -76,7 +80,7 @@ async function turn(direction) {
   const outgoing = spreads[current];
   const incoming = spreads[target];
   const fromLeft = direction < 0;
-  prepareSpread(target);
+  prepareSpread(target, "high");
   await prepared.get(target);
 
   if (!motion.matches && typeof sheet.animate === "function") {
@@ -102,7 +106,7 @@ async function turn(direction) {
   const activeControl = document.activeElement;
   current = target;
   showSpread();
-  prefetchAdjacent();
+  prefetchAdjacent(direction);
   if (activeControl === previousSpread && previousSpread.disabled) nextSpread.focus({preventScroll: true});
   if (activeControl === nextSpread && nextSpread.disabled) previousSpread.focus({preventScroll: true});
   reader.removeAttribute("aria-busy");
@@ -126,8 +130,8 @@ book.addEventListener("dblclick", () => clearTimeout(pageClick));
 showSpread();
 const readerObserver = new IntersectionObserver(entries => {
   if (!entries.some(entry => entry.isIntersecting)) return;
-  prepareSpread(0);
+  prepareSpread(0, "high");
   prefetchAdjacent();
   readerObserver.disconnect();
-}, {rootMargin: "900px 0px"});
+}, {rootMargin: printProject.id === "book" ? "1800px 0px" : "900px 0px"});
 readerObserver.observe(reader);

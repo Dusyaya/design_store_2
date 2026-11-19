@@ -196,7 +196,7 @@ const CASE_HERO_IMAGES = {
   ],
   book: [
     ["book/обложка1.jpg", "Обложка книги", "Book cover"],
-    ["book/hero-spread.jpg", "Нахимовское училище", "Nakhimov Naval School"]
+    ["book/hero-spread.jpg", "Разворот книги", "Book spread"]
   ],
   supertyazh: [
     ["supertyazh/mockup-01.jpg", "Уличный мокап", "Outdoor mockup"],
@@ -281,7 +281,7 @@ function caseTags(project) {
     '<span class="tag">' + typography(tag) + '</span>').join("") + '</div>';
 }
 
-function enableFloatingWindow(item, area, {returnToOrigin = true, edgeGap = 0, overflowRatio = .2} = {}) {
+function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edgeGap = 0, overflowRatio = .2} = {}) {
   const image = item.querySelector("img.portfolio-zoomable");
   const control = image || item.querySelector(".window-bar");
   if (!image) control.tabIndex = 0;
@@ -291,7 +291,7 @@ function enableFloatingWindow(item, area, {returnToOrigin = true, edgeGap = 0, o
     : "Перетащите окно или переместите его стрелками. Escape возвращает окно на место.";
   const zoom = image ? (english ? " Press Enter to enlarge." : " Нажмите Enter, чтобы увеличить изображение.") : "";
   control.setAttribute("aria-description", movement + zoom);
-  enableFloatingItem(item, area, {returnToOrigin, followScroll: true, edgeGap, overflowRatio});
+  enableFloatingItem(item, area, {returnToOrigin, returnAt, followScroll: true, edgeGap, overflowRatio});
 }
 
 function enableFloatingItem(item, area, {
