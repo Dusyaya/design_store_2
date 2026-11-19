@@ -317,8 +317,11 @@
   });
   root.querySelectorAll(".floating-window").forEach(item => {
     const hero = item.closest(".case-hero");
-    enableFloatingWindow(item, hero || item.closest(".case"), hero
-      ? {returnToOrigin: false, edgeGap: 0, overflowRatio: .2}
-      : undefined);
+    const area = hero || item.closest(".case");
+    const text = hero ? ".case-summary" : ".section-head, .case-rows, .project-navigation";
+    enableFloatingWindow(item, area, {
+      returnToOrigin: !hero,
+      avoid: area.querySelectorAll(text)
+    });
   });
 })();

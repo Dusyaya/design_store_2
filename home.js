@@ -52,7 +52,8 @@ cards.forEach(card => enableFloatingItem(card.querySelector(".catalog-cover"), h
   returnToOrigin: true,
   followScroll: true,
   edgeGap: 0,
-  activationTarget: card
+  activationTarget: card,
+  avoid: home.querySelectorAll(".portfolio-intro, .catalog-intro, .catalog-card-copy, .about-copy")
 }));
 
 function renderCatalog() {
@@ -95,10 +96,10 @@ updateFilters();
 initSkillBadges();
 
 const about = document.querySelector("#about");
-enableFloatingWindow(about.querySelector(".about-portrait"), about, {returnToOrigin: false, returnAt: matchMedia("(max-width: 760px)")});
+enableFloatingWindow(about.querySelector(".about-portrait"), about, {returnToOrigin: false, returnAt: matchMedia("(max-width: 760px)"), avoid: about.querySelectorAll(".about-copy, .section-head")});
 
 const heroSection = document.querySelector(".portfolio-hero");
-enableFloatingWindow(heroSection.querySelector(".portrait-window"), heroSection, {edgeGap: 0});
+enableFloatingWindow(heroSection.querySelector(".portrait-window"), heroSection, {avoid: heroSection.querySelectorAll(".portfolio-intro, .portfolio-heading h1, .portfolio-year")});
 
 function initSkillBadges() {
   const orbit = document.querySelector(".skill-orbit");

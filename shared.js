@@ -281,7 +281,7 @@ function caseTags(project) {
     '<span class="tag">' + typography(tag) + '</span>').join("") + '</div>';
 }
 
-function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edgeGap = 0, overflowRatio = .2} = {}) {
+function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edgeGap = 0, overflowRatio = .2, avoid = []} = {}) {
   const image = item.querySelector("img.portfolio-zoomable");
   const control = image || item.querySelector(".window-bar");
   if (!image) control.tabIndex = 0;
@@ -291,11 +291,11 @@ function enableFloatingWindow(item, area, {returnToOrigin = true, returnAt, edge
     : "Перетащите окно или переместите его стрелками. Escape возвращает окно на место.";
   const zoom = image ? (english ? " Press Enter to enlarge." : " Нажмите Enter, чтобы увеличить изображение.") : "";
   control.setAttribute("aria-description", movement + zoom);
-  enableFloatingItem(item, area, {returnToOrigin, returnAt, followScroll: true, edgeGap, overflowRatio});
+  enableFloatingItem(item, area, {returnToOrigin, returnAt, followScroll: true, edgeGap, overflowRatio, avoid});
 }
 
 function enableFloatingItem(item, area, {
-  returnToOrigin = false, returnAt, followScroll = false, edgeGap = 0, overflowRatio = .2, activationTarget = item
+  returnToOrigin = false, returnAt, followScroll = false, edgeGap = 0, overflowRatio = .2, activationTarget = item, avoid = []
 } = {}) {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const shouldReturn = () => returnToOrigin || returnAt?.matches;
@@ -316,11 +316,42 @@ function enableFloatingItem(item, area, {
       left += parent.offsetLeft;
       top += parent.offsetTop;
     }
+    let minX = horizontalMargin - left;
+    let maxX = area.clientWidth - left - item.offsetWidth - horizontalMargin;
+    let minY = verticalMargin - top;
+    let maxY = area.clientHeight - top - item.offsetHeight - verticalMargin;
+
+    if (avoid.length) {
+      const rect = item.getBoundingClientRect();
+      const style = getComputedStyle(item);
+      const transform = new DOMMatrixReadOnly(style.transform === "none" ? undefined : style.transform);
+      const [tx, ty = 0] = style.translate === "none" ? [0, 0] : style.translate.split(" ").map(parseFloat);
+      const originLeft = rect.left - tx - transform.e;
+      const originTop = rect.top - ty - transform.f;
+      const driftX = style.animationName === "none" ? 0 : Math.abs(parseFloat(style.getPropertyValue("--drift-x")) || 20);
+      const driftY = style.animationName === "none" ? 0 : Math.abs(parseFloat(style.getPropertyValue("--drift-y")) || 18);
+
+      for (const text of avoid) {
+        if (!text.getClientRects().length) continue;
+        const box = text.getBoundingClientRect();
+        const west = box.left - originLeft - rect.width;
+        const east = originLeft - box.right;
+        const north = box.top - originTop - rect.height;
+        const south = originTop - box.bottom;
+        const horizontal = Math.max(west, east);
+        const vertical = Math.max(north, south);
+        if (vertical >= -1 && (horizontal < -1 || vertical <= horizontal)) {
+          if (north >= -1) maxY = Math.min(maxY, north - driftY);
+          else minY = Math.max(minY, driftY - south);
+        } else if (horizontal >= -1) {
+          if (west >= -1) maxX = Math.min(maxX, west - driftX);
+          else minX = Math.max(minX, driftX - east);
+        }
+      }
+    }
     return [
-      Math.max(horizontalMargin - left, Math.min(nextX,
-        area.clientWidth - left - item.offsetWidth - horizontalMargin)),
-      Math.max(verticalMargin - top, Math.min(nextY,
-        area.clientHeight - top - item.offsetHeight - verticalMargin))
+      Math.max(minX, Math.min(nextX, maxX)),
+      Math.max(minY, Math.min(nextY, maxY))
     ];
   }
 
