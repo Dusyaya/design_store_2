@@ -314,7 +314,7 @@
         ready = true;
         show(active);
         loadObserver.disconnect();
-      }, {rootMargin: "420px 0px"});
+      }, {rootMargin: "1000px 0px"});
       loadObserver.observe(track);
     });
   });

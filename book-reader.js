@@ -46,19 +46,26 @@ function prepareSpread(index, priority = "low") {
   if (index < 0 || index >= spreads.length) return;
   const images = [...spreads[index].querySelectorAll("img")];
   if (priority === "high") images.forEach(image => { image.fetchPriority = "high"; });
-  if (prepared.has(index)) return;
-  prepared.set(index, Promise.allSettled(images.map(image => {
+  if (prepared.has(index)) return prepared.get(index);
+  const decoded = Promise.allSettled(images.map(image => {
     image.fetchPriority = priority;
     image.previousElementSibling.srcset = image.dataset.original + ".large.webp";
     image.src = image.dataset.src;
     return image.decode();
-  })));
+  }));
+  prepared.set(index, decoded);
+  return decoded;
 }
 
 function prefetchAdjacent(direction = 1) {
-  prepareSpread(current - 1);
-  prepareSpread(current + 1);
-  if (printProject.id === "book") prepareSpread(current + 2 * direction);
+  const adjacent = current + direction;
+  const next = prepareSpread(adjacent);
+  prepareSpread(current - direction);
+  if (printProject.id === "book") {
+    next?.then(() => {
+      if (current + direction === adjacent) prepareSpread(adjacent + direction);
+    });
+  }
 }
 
 function showSpread() {
@@ -80,8 +87,7 @@ async function turn(direction) {
   const outgoing = spreads[current];
   const incoming = spreads[target];
   const fromLeft = direction < 0;
-  prepareSpread(target, "high");
-  await prepared.get(target);
+  await prepareSpread(target, "high");
 
   if (!motion.matches && typeof sheet.animate === "function") {
     const front = outgoing.querySelector(fromLeft ? ".left img" : ".right img");
