@@ -1117,6 +1117,7 @@ body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
   --cover-padding: clamp(6px, 1.35vw, 24px);
 }
 .case-hero-windows .is-left { grid-column: 1 / 7; }
+.case:has(.book-section) .case-side-window.is-left { margin-left: calc(-1 * clamp(8px, 1.2vw, 24px)); }
 .case-hero-windows .is-right { grid-column: 9 / 15; }
 .case-hero-windows .case-cover-front {
   grid-column: 5 / 11;
