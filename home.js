@@ -96,7 +96,17 @@ updateFilters();
 initSkillBadges();
 
 const about = document.querySelector("#about");
-enableFloatingWindow(about.querySelector(".about-portrait"), about, {returnToOrigin: false, returnAt: matchMedia("(max-width: 760px)"), avoid: about.querySelectorAll(".about-copy, .section-head")});
+// Граница проходит по видимому содержимому, включая кнопки связи.
+const aboutTextBounds = Array.from(about.querySelectorAll(".section-head, .about-copy h2, .about-text p"), element => {
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  return range;
+});
+enableFloatingWindow(about.querySelector(".about-portrait"), about, {
+  returnToOrigin: false,
+  returnAt: matchMedia("(max-width: 760px)"),
+  avoid: [...aboutTextBounds, ...about.querySelectorAll(".about-actions a")]
+});
 
 const heroSection = document.querySelector(".portfolio-hero");
 enableFloatingWindow(heroSection.querySelector(".portrait-window"), heroSection, {avoid: heroSection.querySelectorAll(".portfolio-intro, .portfolio-heading h1, .portfolio-year")});
