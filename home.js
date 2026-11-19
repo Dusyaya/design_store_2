@@ -129,6 +129,6 @@ function initSkillBadges() {
   for (const badge of badges) {
     const label = badge.querySelector(".skill-badge-visual > span:last-child").textContent;
     badge.setAttribute("aria-label", label);
-    enableFloatingItem(badge, orbit, {returnAt: mobile, avoid: heroTextBounds, textOverlapRatio: .1});
+    enableFloatingItem(badge, orbit, {returnAt: mobile});
   }
 }
