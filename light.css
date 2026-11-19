@@ -1202,3 +1202,38 @@ body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
     visibility: hidden !important;
   }
 }
+
+.cookie-settings,
+.cookie-actions button {
+  border: 1px solid var(--control-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.cookie-settings { margin-inline-start: 12px; }
+.cookie-panel {
+  position: fixed;
+  inset: auto 16px 16px auto;
+  z-index: 150;
+  box-sizing: border-box;
+  width: min(430px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 18px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 8px 28px #0002;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.cookie-panel h2 { margin: 0; font-size: 17px; }
+.cookie-panel p { margin: 6px 0; }
+.cookie-panel a { color: inherit; text-decoration: underline; }
+.cookie-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.cookie-actions button { flex: 1 1 auto; }
+.cookie-actions button:hover, .cookie-settings:hover { background: var(--hover); }
