@@ -116,22 +116,29 @@ if (!project) {
       danceCarousel(Array.from({length:9},(_,i)=>'assets/projects/dance/merch/merch-'+String(i+1).padStart(2,'0')+'.jpg'),'photos') +
       '</div></article></section>'
     : '';
-  const dancePostersHtml = project.id === 'dance-posters'
-    ? '<section class="dance-posters-case"><div class="section-head"><span>ВИДЕОАФИШИ</span><span>4 ВИДЕО</span></div>' +
-      '<div class="dance-posters-grid">' +
+  const english = window.PORTFOLIO_LANG === 'en';
+  const posterWindows = project.id === 'dance-posters'
+    ? '<div class="dance-posters-grid">' +
       [
-        ['Даша Писанец','dasha.mp4'],
-        ['Пантера','pantera.mp4'],
-        ['Сакура','sakura.mp4','720 / 1316'],
-        ['Trap Dance','Афиша_Соня.mp4']
-      ].map(([name, file, aspect = "9 / 16"]) => {
+        ['Даша Писанец', 'Dasha Pisanets', 'dasha.mp4'],
+        ['Пантера', 'Pantera', 'pantera.mp4'],
+        ['Сакура', 'Sakura', 'sakura.mp4', '720 / 1316'],
+        ['Trap Dance', 'Trap Dance', 'Афиша_Соня.mp4']
+      ].map(([ru, en, file, aspect = '9 / 16']) => {
+        const name = english ? en : ru;
         const videoPath = imagePath('assets/projects/dance-posters/' + file);
-        const posterPath = videoPath.replace(/\.mp4$/, '.webp');
         return '<figure class="media-window floating-window">' + windowBar(name) +
-          '<video class="dance-poster-player" style="--poster-aspect: ' + aspect + '" controls playsinline preload="none" aria-label="Видеоафиша ' + name + '" poster="' +
-          posterPath + '" src="' + videoPath + '"></video></figure>';
-      }).join('') +
-      '</div></section>'
+          '<button type="button" class="dance-poster-open" style="--poster-aspect:' + aspect +
+          '" data-video="' + escapeHtml(videoPath) + '" data-title="' + escapeHtml(name) +
+          '" aria-label="' + (english ? 'Play ' : 'Воспроизвести ') + escapeHtml(name) + '">' +
+          '<img src="' + escapeHtml(videoPath.replace(/\.mp4$/, '.webp')) + '" alt="">' +
+          '<span aria-hidden="true">▶</span></button></figure>';
+      }).join('') + '</div>'
+    : '';
+  const posterDialog = posterWindows
+    ? '<dialog class="dance-poster-dialog" aria-label="' + (english ? 'Video poster' : 'Видеоафиша') +
+      '"><button type="button" class="dance-poster-close" aria-label="' + (english ? 'Close' : 'Закрыть') +
+      '">×</button><video controls playsinline></video></dialog>'
     : '';
   const danceWebsiteHtml = project.id === 'dance-website'
     ? '<section class="dance-website-preview"><div class="section-head"><span>САЙТ ТАНЦЕВАЛЬНОЙ ШКОЛЫ</span><span>ВЕБ-ПРОЕКТ</span></div>' +
@@ -210,11 +217,11 @@ if (!project) {
     typography(project.field) + ' / ' + escapeHtml(project.year) + '</div>' +
     '<h1>' + projectTitle(project) + '</h1>' +
     '<div class="case-intro"><p>' + typography(project.short) + '</p></div>' +
-    caseTags(project) + '</header>' + caseCover(project) + '</div>' +
+    caseTags(project) + '</header>' + (posterWindows || caseCover(project)) + '</div>' +
     '<div class="case-rows">' + sections.map(([heading, description]) =>
       '<div class="case-row"><h2>' + typography(heading) + '</h2><p>' +
       typography(description) + '</p></div>').join("") + '</div>' +
-    dancePostersHtml + danceWebsiteHtml + owlHtml + bakerHtml + extraHtml + showcaseHtml + danceHtml + sevstarHtml + supertyazhHtml + zinHtml + (project.id === "gold" ? '<section class="case-showcase zp-cases"><div class="section-head"><span>КЕЙСЫ</span><span>ЗОЛОТОЕ ПРАВИЛО</span></div>' + bannerSection + presentationHtml + merchHtml + printHtml + '</section>' : '') +
+    posterDialog + danceWebsiteHtml + owlHtml + bakerHtml + extraHtml + showcaseHtml + danceHtml + sevstarHtml + supertyazhHtml + zinHtml + (project.id === "gold" ? '<section class="case-showcase zp-cases"><div class="section-head"><span>КЕЙСЫ</span><span>ЗОЛОТОЕ ПРАВИЛО</span></div>' + bannerSection + presentationHtml + merchHtml + printHtml + '</section>' : '') +
     (showcase.length || project.id === 'babushka' || project.id === 'dance' || project.id === 'owl' || project.id === 'baker' || project.id === 'dance-website' || project.id === 'dance-posters' || project.id === 'extra' || project.id === 'sevstar' || project.id === 'gold-ufa' || project.id === 'gold' || project.id === 'supertyazh' ? '' : '<div class="section-head"><span>ГАЛЕРЕЯ ПРОЕКТА</span><span>ФОТОГРАФИИ И МАКЕТЫ</span></div><div class="gallery">' + gallery + '</div>') +
     projectNavigation(project) + '</div>';
   main.querySelectorAll("img").forEach(image => { image.decoding = "async"; });
@@ -263,16 +270,32 @@ if (!project) {
     nextBtn.addEventListener('click',()=>go(1));
     prev.disabled=true;
   }
-  // При воспроизведении одной афиши остальные останавливаются.
-  const posterVideos = [...main.querySelectorAll('.dance-poster-player')];
-  posterVideos.forEach(video => {
-    const frame = video.closest('.media-window');
-    video.addEventListener('play', () => {
-      frame.classList.add('is-playing');
-      posterVideos.forEach(other => { if (other !== video) other.pause(); });
+  const playerDialog = main.querySelector('.dance-poster-dialog');
+  if (playerDialog) {
+    const player = playerDialog.querySelector('video');
+    let trigger;
+    main.querySelectorAll('.dance-poster-open').forEach(button => {
+      button.addEventListener('click', () => {
+        trigger = button;
+        player.src = button.dataset.video;
+        playerDialog.setAttribute('aria-label', button.dataset.title);
+        playerDialog.showModal();
+        player.play().catch(() => {});
+        playerDialog.requestFullscreen?.().catch(() => {});
+      });
     });
-    video.addEventListener('pause', () => frame.classList.remove('is-playing'));
-  });
+    playerDialog.querySelector('button').addEventListener('click', () => playerDialog.close());
+    playerDialog.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && playerDialog.open) playerDialog.close();
+    });
+    playerDialog.addEventListener('close', () => {
+      if (document.fullscreenElement === playerDialog) document.exitFullscreen().catch(() => {});
+      player.pause();
+      player.removeAttribute('src');
+      player.load();
+      trigger?.focus({preventScroll: true});
+    });
+  }
   main.querySelectorAll(".showcase-media.is-email .showcase-slide").forEach(slide => {
     const img = slide.querySelector("img");
     const updateRatio = () => {

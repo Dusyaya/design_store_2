@@ -206,10 +206,6 @@ const CASE_HERO_IMAGES = {
     ["dance-website/about.jpg", "О нас", "About us"],
     ["dance-website/memberships.jpg", "Абонементы и направления", "Memberships and classes"]
   ],
-  "dance-posters": [
-    ["dance-posters/hero-dasha.webp", "Даша Писанец", "Dasha Pisanets"],
-    ["dance-posters/hero-pantera.webp", "Пантера", "Pantera"]
-  ],
   extra: [
     ["extra/illustrations/02.jpg", "Иллюстрация", "Illustration"],
     ["extra/3d/01.jpg", "3D-модель", "3D model"]
@@ -231,9 +227,7 @@ function caseCover(project) {
   const artHeight = bottom - top;
   const cover = '<figure class="case-cover floating-window case-cover-front' + (landscape ? ' is-landscape' : '') +
     '" style="--cover-ratio:' + artWidth / artHeight + '">' +
-    windowBar(project.id === "dance-posters"
-      ? (window.PORTFOLIO_LANG === "en" ? "Posters" : "Афиши")
-      : project.name + ".png") +
+    windowBar(project.name + ".png") +
     '<div class="case-cover-media"><div class="case-cover-artwork"><img src="' + coverBase(project) +
     '.png" alt="' + escapeHtml(project.name) + '" width="' + width + '" height="' + height +
     '" style="--image-width:' + width / artWidth * 100 + '%;--image-left:' + -left / artWidth * 100 +
@@ -249,8 +243,7 @@ function caseCover(project) {
       (original ? ' data-original="' + escapeHtml(SITE_ROOT + original) + '"' : '') +
       ' decoding="async"></div></figure>';
   };
-  const posters = project.id === "dance-posters" ? " poster-hero-windows" : "";
-  return '<div class="case-hero-windows' + posters + (images.length === 1 ? " has-one-side" : "") + '">' +
+  return '<div class="case-hero-windows' + (images.length === 1 ? " has-one-side" : "") + '">' +
     renderSide(images[0], "left") + cover + (images[1] ? renderSide(images[1], "right") : "") + '</div>';
 }
 

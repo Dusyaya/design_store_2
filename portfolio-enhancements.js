@@ -311,7 +311,7 @@
   }
 
   root.querySelectorAll("img").forEach(image => {
-    if (carouselImages.has(image) || image.closest(".print-book")) return;
+    if (carouselImages.has(image) || image.closest(".print-book, .dance-poster-open")) return;
     labelImage(image, labels.zoom);
     bindImage(image, () => openPreview([image], 0));
   });
