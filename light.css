@@ -84,7 +84,7 @@ main { min-height: 70vh; }
 .topbar nav .language-switch a { min-width: 28px; padding: 0 4px; }
 
 .home-page main, .portfolio-hero { position: relative; }
-.portfolio-hero { padding-block: clamp(26px, 2.4vw, 46px) clamp(16px, 1.55vw, 28px); }
+.portfolio-hero { padding-block: clamp(38px, 3.2vw, 62px) clamp(16px, 1.55vw, 28px); }
 .portfolio-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .portfolio-heading h1 {
   margin: 0;
@@ -241,13 +241,13 @@ main { min-height: 70vh; }
   .skill-badge, .floating-window { animation: none; }
 }
 
-.catalog-section { padding-bottom: clamp(34px, 4vw, 76px); }
+.catalog-section { padding-bottom: clamp(46px, 4.7vw, 90px); }
 .catalog-layout { row-gap: var(--grid-gap); }
 .catalog-intro { align-self: start; min-width: 0; }
 @media (min-width: 951px) {
   .topbar { padding-inline: calc(var(--page-inset) - clamp(16px, 1.4vw, 28px)); }
   .topbar nav { gap: clamp(14px, 1.55vw, 30px); }
-  .catalog-section { padding-top: clamp(20px, 1.6vw, 32px); }
+  .catalog-section { padding-top: clamp(32px, 2.2vw, 44px); }
   .catalog-intro { position: sticky; top: var(--sticky-offset, 64px); }
 }
 .catalog-intro h2 {
@@ -399,7 +399,7 @@ footer {
 .home-page footer { padding-block: clamp(14px, 1.2vw, 23px); }
 
 .home-page main, main:has(.case-hero) { overflow-x: clip; }
-.case.wrap { --case-back-gap: 12px; position: relative; padding-bottom: var(--section-space); }
+.case.wrap { --case-back-gap: clamp(22px, 1.65vw, 34px); position: relative; padding-bottom: var(--section-space); }
 .case-hero {
   position: relative;
   isolation: isolate;
@@ -735,7 +735,7 @@ footer {
     padding: 14px 4px 20px;
   }
   .skill-badge { position: relative; inset: auto; width: 100%; }
-  .catalog-section { padding-top: 18px; }
+  .catalog-section { padding-top: 28px; }
   .catalog-layout { grid-template-columns: minmax(0, 1fr); padding-right: 0; row-gap: 22px; }
   .catalog-intro h2 { max-width: none; }
 }
