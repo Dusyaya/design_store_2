@@ -8,14 +8,14 @@
   const copy = english ? {
     settings: "Cookie settings",
     title: "Analytics cookies",
-    message: "With your permission, Yandex Metrica uses cookies and collects information about visits, clicks and your browser so I can understand how the portfolio is used. You can change your choice in the footer.",
+    message: "With your permission, Yandex Metrica uses cookies to collect statistics on visits and clicks. This helps me make the portfolio easier to use. You can change your choice in the footer.",
     privacy: "Yandex privacy policy",
     accept: "Allow analytics",
     decline: "Decline analytics"
   } : {
     settings: "Настройки cookies",
     title: "Файлы cookie для аналитики",
-    message: "С вашего согласия Яндекс Метрика использует файлы cookie и собирает сведения о посещениях, кликах и браузере. Это помогает мне понять, как пользуются портфолио. Выбор можно изменить внизу страницы.",
+    message: "С вашего согласия Яндекс Метрика использует файлы cookie для сбора статистики посещений и кликов. Это помогает мне сделать портфолио удобнее. Изменить выбор можно внизу страницы.",
     privacy: "Политика конфиденциальности Яндекса",
     accept: "Разрешить аналитику",
     decline: "Отклонить аналитику"

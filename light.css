@@ -1203,7 +1203,6 @@ body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
   }
 }
 
-.cookie-settings,
 .cookie-actions button {
   border: 1px solid var(--control-border);
   border-radius: 999px;
@@ -1213,7 +1212,25 @@ body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
   font: inherit;
   cursor: pointer;
 }
-.cookie-settings { margin-inline-start: 12px; }
+footer:has(.cookie-settings) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.cookie-settings {
+  margin-inline-start: auto;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+  cursor: pointer;
+}
+.cookie-settings:hover { color: var(--text); }
 .cookie-panel {
   position: fixed;
   inset: auto 16px 16px auto;
@@ -1236,4 +1253,4 @@ body[data-project="dance"] .case-cover { --cover-max-width: 420px; }
 .cookie-panel a { color: inherit; text-decoration: underline; }
 .cookie-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .cookie-actions button { flex: 1 1 auto; }
-.cookie-actions button:hover, .cookie-settings:hover { background: var(--hover); }
+.cookie-actions button:hover { background: var(--hover); }
