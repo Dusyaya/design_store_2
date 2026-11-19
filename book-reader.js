@@ -58,14 +58,9 @@ function prepareSpread(index, priority = "low") {
 }
 
 function prefetchAdjacent(direction = 1) {
-  const adjacent = current + direction;
-  const next = prepareSpread(adjacent);
+  prepareSpread(current + direction, "auto");
   prepareSpread(current - direction);
-  if (printProject.id === "book") {
-    next?.then(() => {
-      if (current + direction === adjacent) prepareSpread(adjacent + direction);
-    });
-  }
+  if (printProject.id === "book") prepareSpread(current + 2 * direction);
 }
 
 function showSpread() {
@@ -134,9 +129,9 @@ book.addEventListener("dblclick", () => clearTimeout(pageClick));
 
 
 showSpread();
+prepareSpread(0, "high");
 const readerObserver = new IntersectionObserver(entries => {
   if (!entries.some(entry => entry.isIntersecting)) return;
-  prepareSpread(0, "high");
   prefetchAdjacent();
   readerObserver.disconnect();
 }, {rootMargin: printProject.id === "book" ? "1800px 0px" : "900px 0px"});
